@@ -94,12 +94,12 @@ fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
         let mut kpagecount_read = Cursor::new(&kpagecount_read);
         let mut kpagecgroup_read = Cursor::new(&kpagecgroup_read);
         let mut kpageflags_read = Cursor::new(&kpageflags_read);
-        for page in &mut pages {
+        for (i, page) in pages.iter_mut().enumerate() {
             page.times_mapped = kpagecount_read.read_u64::<LittleEndian>()?;
             page.cgroup_inode = kpagecgroup_read.read_u64::<LittleEndian>()?;
             let flags_bits = kpageflags_read.read_u64::<LittleEndian>()?;
             page.flags = PageFlags::from_bits(flags_bits)
-                .ok_or(format!("wrong flags: {:#b}", flags_bits))?;
+                .ok_or(format!("wrong flags: {:#b} at PFN {}", flags_bits, i))?;
         }
     }
     let mut flags_counts = HashMap::<_, usize>::new();
