@@ -37,13 +37,23 @@ bitflags! {
         const BALLOON = 1 << 23;
         const ZERO_PAGE = 1 << 24;
         const IDLE = 1 << 25;
-        const FLAG_26 = 1 << 26;
-        const FLAG_32 = 1 << 32;
-        const FLAG_33 = 1 << 33;
-        const FLAG_34 = 1 << 34;
-        const FLAG_35 = 1 << 35;
-        const FLAG_37 = 1 << 37;
-        const FLAG_38 = 1 << 38;
+        const KPF_PGTABLE = 1 << 26;
+        const RESERVED = 1 << 32;
+        const MLOCKED = 1 << 33;
+        const MAPPEDTODISK = 1 << 34;
+        const PRIVATE = 1 << 35;
+        const PRIVATE_2 = 1 << 36;
+        const OWNER_PRIVATE = 1 << 37;
+        const ARCH = 1 << 38;
+        const UNCACHED = 1 << 39;
+        const SOFTDIRTY = 1 << 40;
+        const READAHEAD = 1 << 48;
+        const SLOB_FREE = 1 << 49;
+        const SLUB_FROZEN = 1 << 50;
+        const SLUB_DEBUG = 1 << 51;
+        const FILE = 1 << 61;
+        const SWAP = 1 << 62;
+        const MMAP_EXCLUSIVE = 1 << 63;
     }
 }
 
