@@ -57,7 +57,7 @@ bitflags! {
     }
 }
 
-#[derive(Debug, Default, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Ord, PartialOrd, Eq, PartialEq, Hash)]
 struct Page {
     times_mapped: u64,
     cgroup_inode: u64,
@@ -112,18 +112,20 @@ fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
                 .ok_or(format!("wrong flags: {:#b} at PFN {}", flags_bits, i))?;
         }
     }
-    let mut flags_counts = HashMap::<_, usize>::new();
-    for page in &pages {
-        *flags_counts.entry(page.flags).or_default() += 1;
+    let mut pages_counts = HashMap::<_, usize>::new();
+    for &page in &pages {
+        *pages_counts.entry(page).or_default() += 1;
     }
-    let mut sorted_flags_counts = flags_counts.clone().into_iter().collect::<Vec<_>>();
-    sorted_flags_counts.sort_by_key(|(_, count)| !*count);
-    for (i, &(page_flags, count)) in sorted_flags_counts.iter().enumerate().take(15) {
+    let mut sorted_pages_counts = pages_counts.clone().into_iter().collect::<Vec<_>>();
+    sorted_pages_counts.sort_by_key(|(_, count)| !*count);
+    for (i, &(page, count)) in sorted_pages_counts.iter().enumerate().take(15) {
         println!(
-            "{:>5}. {:>11} - {:?}",
+            "{:>5}. {:>11} - times_mapped = {:^8}; cgroup_inode = {:^8}; flags = {:?}",
             i + 1,
             page_count_to_size_string(count),
-            page_flags
+            page.times_mapped,
+            page.cgroup_inode,
+            page.flags,
         );
     }
     println!(
